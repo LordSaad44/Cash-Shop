@@ -3,15 +3,18 @@
 		"textureWidth":256,
 		"textureHeight":256,
 		"sprites": {
-			"main_background":[0, 0, 224, 192],
-			"buy_button_hover":[0, 225, 24, 24],
-			"buy_button_grey":[27, 225, 24, 24],
+			"main_background":[0, 0, 176, 192],
+			"gold_sign":[177, 7, 48, 32],
 			
-			"arrow_left_hover":[53, 225, 24, 16],
-			"arrow_right_hover":[79, 225, 24, 16],
+			"buy_normal":[3, 233, 26, 24],
+			"buy_highlighted":[31, 233, 26, 24],
+			"buy_locked":[59, 233, 26, 24],
 			
-			"arrow_left":[105, 225, 24, 19],
-			"arrow_right":[131, 225, 24, 19]			
+			"arrow_left_hover":[87, 233, 24, 19],
+			"arrow_right_hover":[114, 233, 24, 19],
+			
+			"arrow_left":[139, 233, 24, 19],
+			"arrow_right":[165, 233, 24, 19]			
 		}
 	}
 }

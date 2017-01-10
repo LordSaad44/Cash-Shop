@@ -1,10 +1,10 @@
 package me.lordsaad.cashshop.common.item;
 
 import com.teamwizardry.librarianlib.common.base.item.ItemMod;
-import com.teamwizardry.librarianlib.common.util.ConfigPropertyInt;
 import me.lordsaad.cashshop.Cashshop;
-import me.lordsaad.cashshop.api.Constants;
-import me.lordsaad.cashshop.common.entity.EntityNPC;
+import me.lordsaad.cashshop.api.ConfigValues;
+import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,9 +19,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ItemPurse extends ItemMod {
 
-    @ConfigPropertyInt(modid = Constants.MOD_ID, category = "general", id = "started_amount", comment = "The initial amount of money a player starts with", defaultValue = 100)
-    public static int starterAmount;
-
     public ItemPurse() {
         super("purse");
         setMaxStackSize(1);
@@ -30,13 +27,10 @@ public class ItemPurse extends ItemMod {
     @NotNull
     @Override
     public ActionResult<ItemStack> onItemRightClick(@NotNull ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        if (!playerIn.getEntityData().hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
-            playerIn.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
-            playerIn.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setInteger("currency", starterAmount);
-        }
-
         if (!playerIn.isSneaking() && !worldIn.isRemote)
             playerIn.openGui(Cashshop.instance, 0, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
+
+        WalletCapabilityProvider.get(Minecraft.getMinecraft().player).setWallet(ConfigValues.starterAmount, playerIn);
 
         return new ActionResult(EnumActionResult.PASS, itemStackIn);
     }

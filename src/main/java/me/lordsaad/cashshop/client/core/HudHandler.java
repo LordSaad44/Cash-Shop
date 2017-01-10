@@ -5,11 +5,16 @@ import com.teamwizardry.librarianlib.client.sprite.Sprite;
 import com.teamwizardry.librarianlib.client.sprite.Texture;
 import com.teamwizardry.librarianlib.common.util.ConfigPropertyInt;
 import com.teamwizardry.librarianlib.common.util.math.Vec2d;
+import me.lordsaad.cashshop.api.ConfigValues;
 import me.lordsaad.cashshop.api.Constants;
+import me.lordsaad.cashshop.api.capability.IWalletCapability;
+import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -85,10 +90,12 @@ public class HudHandler {
         coin.getTex().bind();
         coin.draw((int) ClientTickHandler.getPartialTicks(), position.getXf() + coinBackground.getWidth(), position.getYf() - 4);
 
-        String wallet = "385003";
-        int nbWidth = (coinBackground.getWidth() / 2) - (Minecraft.getMinecraft().fontRendererObj.getStringWidth(wallet) / 2);
+        int wallet = WalletCapabilityProvider.get(Minecraft.getMinecraft().player).getWallet();
 
-        Minecraft.getMinecraft().fontRendererObj.drawString("34634", position.getXf() + nbWidth, position.getYf() + (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2), 0, false);
+
+        int nbWidth = (coinBackground.getWidth() / 2) - (Minecraft.getMinecraft().fontRendererObj.getStringWidth(wallet + "") / 2);
+
+        Minecraft.getMinecraft().fontRendererObj.drawString(wallet + "", position.getXf() + nbWidth, position.getYf() + (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2), 0, false);
 
         GlStateManager.popMatrix();
     }

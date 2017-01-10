@@ -7,9 +7,9 @@
       "cost": 10
     },
     {
-      "item": "minecraft:potato",
+      "output": "minecraft:potato",
       "amount": 64,
-      "cost": 23504
+      "cost": 20
     }
   ]
 }
