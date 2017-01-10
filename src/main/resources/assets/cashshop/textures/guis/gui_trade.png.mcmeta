@@ -1,0 +1,17 @@
+{
+	"spritesheet":{
+		"textureWidth":256,
+		"textureHeight":256,
+		"sprites": {
+			"main_background":[0, 0, 224, 192],
+			"buy_button_hover":[0, 225, 24, 24],
+			"buy_button_grey":[27, 225, 24, 24],
+			
+			"arrow_left_hover":[53, 225, 24, 16],
+			"arrow_right_hover":[79, 225, 24, 16],
+			
+			"arrow_left":[105, 225, 24, 19],
+			"arrow_right":[131, 225, 24, 19]			
+		}
+	}
+}

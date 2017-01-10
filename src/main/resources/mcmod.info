@@ -1,0 +1,20 @@
+[
+  {
+    "modid": "cashshop",
+    "name": "Cashshop",
+    "description": "Mechwarrior's economy mod",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "LordSaad"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": [
+      "liblib"
+    ]
+  }
+]
