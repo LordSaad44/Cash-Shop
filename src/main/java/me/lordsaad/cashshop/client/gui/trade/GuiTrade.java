@@ -29,10 +29,10 @@ import java.util.List;
  */
 public class GuiTrade extends GuiBase {
 
-	public String name;
-	public List<TradeInfo> trades;
 	public static Texture spriteSheet = new Texture(new ResourceLocation(Constants.MOD_ID, "textures/guis/gui_trade.png"));
 	public static Sprite background = spriteSheet.getSprite("main_background", 177, 192);
+	public String name;
+	public List<TradeInfo> trades;
 	public int wallet = 0;
 
 	public GuiTrade(String npcFile) {
@@ -65,7 +65,9 @@ public class GuiTrade extends GuiBase {
 				JsonArray array = json.getAsJsonObject().getAsJsonArray("trades");
 				for (JsonElement element : array) {
 					if (element.isJsonObject()) {
-						if (element.getAsJsonObject().has("locked")) continue;
+						if (element.getAsJsonObject().has("locked")
+								&& element.getAsJsonObject().get("locked").isJsonPrimitive()
+								&& element.getAsJsonObject().getAsJsonPrimitive("locked").getAsBoolean()) continue;
 						if (element.getAsJsonObject().has("output")
 								&& element.getAsJsonObject().has("cost")
 								&& element.getAsJsonObject().has("amount")) {
@@ -75,13 +77,13 @@ public class GuiTrade extends GuiBase {
 
 							// OUTPUTS //
 							if (element.getAsJsonObject().get("output").isJsonPrimitive()) {
-								ItemStack stack = Utils.getStackFromString((element.getAsJsonObject().getAsJsonPrimitive("output") + "").replace("\"", ""));
+								ItemStack stack = Utils.getStackFromString(element.getAsJsonObject().getAsJsonPrimitive("output").getAsString());
 								if (stack != null) {
 
 									if (element.getAsJsonObject().get("amount").isJsonPrimitive())
-										stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonPrimitive("amount") + "").replace("\"", ""));
+										stack.stackSize = element.getAsJsonObject().getAsJsonPrimitive("amount").getAsInt();
 									else if (element.getAsJsonObject().get("amount").isJsonArray())
-										stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonArray("amount").get(0) + "").replace("\"", ""));
+										stack.stackSize = element.getAsJsonObject().getAsJsonArray("amount").get(0).getAsInt();
 
 									outputs.add(stack);
 								}
@@ -89,25 +91,25 @@ public class GuiTrade extends GuiBase {
 
 								for (JsonElement output : element.getAsJsonObject().getAsJsonArray("output"))
 									if (output.isJsonPrimitive()) {
-										ItemStack stack = Utils.getStackFromString((output.getAsJsonPrimitive() + "").replace("\"", ""));
+										ItemStack stack = Utils.getStackFromString(output.getAsJsonPrimitive().getAsString());
 										if (stack != null)
 											outputs.add(stack);
 									}
 
 								for (ItemStack stack : outputs)
 									if (element.getAsJsonObject().get("amount").isJsonPrimitive())
-										stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonPrimitive("amount") + "").replace("\"", ""));
+										stack.stackSize = element.getAsJsonObject().getAsJsonPrimitive("amount").getAsInt();
 
 									else if (element.getAsJsonObject().get("amount").isJsonArray())
 										for (JsonElement elementAmount : element.getAsJsonObject().getAsJsonArray("amount"))
 											if (elementAmount.isJsonPrimitive() && outputs.indexOf(stack) <= element.getAsJsonObject().getAsJsonArray("amount").size() - 1)
-												stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonArray("amount").get(outputs.indexOf(stack)) + "").replace("\"", ""));
+												stack.stackSize = element.getAsJsonObject().getAsJsonArray("amount").get(outputs.indexOf(stack)).getAsInt();
 							}
 							// OUTPUTS //
 
 							// COST //
 							if (element.getAsJsonObject().get("cost").isJsonPrimitive())
-								cost = Integer.parseInt("" + element.getAsJsonObject().getAsJsonPrimitive("cost"));
+								cost = element.getAsJsonObject().getAsJsonPrimitive("cost").getAsInt();
 							// COST //
 
 							trades.add(new TradeInfo(outputs, cost));
@@ -125,6 +127,11 @@ public class GuiTrade extends GuiBase {
 		compBackground.add(tradeColumn1);
 	}
 
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+
 	public class TradeInfo {
 
 		public List<ItemStack> outputs;
@@ -135,11 +142,5 @@ public class GuiTrade extends GuiBase {
 			this.outputs = outputs;
 			this.cost = cost;
 		}
-	}
-
-	@Override
-	public boolean doesGuiPauseGame()
-	{
-		return false;
 	}
 }
