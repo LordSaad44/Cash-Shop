@@ -73,10 +73,13 @@ public class CommandToggleTrade extends CommandBase {
 				for (JsonObject newObject : trades) newArray.add(newObject);
 				object.add("trades", newArray);
 
-				sender.sendMessage(new TextComponentString(object.toString()));
+				String string = object.toString();
+
 				try {
 					FileWriter writer = new FileWriter(JsonGenerationUtils.INSTANCE.getAssetPath(Constants.MOD_ID) + "/npcs/" + args[0] + ".json");
-					//writer.write(object.toString());
+					writer.write(string);
+					writer.flush();
+					writer.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
