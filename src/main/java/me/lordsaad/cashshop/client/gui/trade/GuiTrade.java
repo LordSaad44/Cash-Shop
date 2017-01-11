@@ -65,6 +65,7 @@ public class GuiTrade extends GuiBase {
 				JsonArray array = json.getAsJsonObject().getAsJsonArray("trades");
 				for (JsonElement element : array) {
 					if (element.isJsonObject()) {
+						if (element.getAsJsonObject().has("locked")) continue;
 						if (element.getAsJsonObject().has("output")
 								&& element.getAsJsonObject().has("cost")
 								&& element.getAsJsonObject().has("amount")) {
@@ -74,13 +75,13 @@ public class GuiTrade extends GuiBase {
 
 							// OUTPUTS //
 							if (element.getAsJsonObject().get("output").isJsonPrimitive()) {
-								ItemStack stack = Utils.getStackFromString(element.getAsJsonObject().getAsJsonPrimitive("output") + "");
+								ItemStack stack = Utils.getStackFromString((element.getAsJsonObject().getAsJsonPrimitive("output") + "").replace("\"", ""));
 								if (stack != null) {
 
 									if (element.getAsJsonObject().get("amount").isJsonPrimitive())
-										stack.stackSize = Integer.parseInt(element.getAsJsonObject().getAsJsonPrimitive("amount") + "");
+										stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonPrimitive("amount") + "").replace("\"", ""));
 									else if (element.getAsJsonObject().get("amount").isJsonArray())
-										stack.stackSize = Integer.parseInt(element.getAsJsonObject().getAsJsonArray("amount").get(0) + "");
+										stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonArray("amount").get(0) + "").replace("\"", ""));
 
 									outputs.add(stack);
 								}
@@ -88,19 +89,19 @@ public class GuiTrade extends GuiBase {
 
 								for (JsonElement output : element.getAsJsonObject().getAsJsonArray("output"))
 									if (output.isJsonPrimitive()) {
-										ItemStack stack = Utils.getStackFromString(output.getAsJsonPrimitive() + "");
+										ItemStack stack = Utils.getStackFromString((output.getAsJsonPrimitive() + "").replace("\"", ""));
 										if (stack != null)
-											outputs.add(Utils.getStackFromString(output.getAsJsonPrimitive() + ""));
+											outputs.add(stack);
 									}
 
 								for (ItemStack stack : outputs)
 									if (element.getAsJsonObject().get("amount").isJsonPrimitive())
-										stack.stackSize = Integer.parseInt(element.getAsJsonObject().getAsJsonPrimitive("amount") + "");
+										stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonPrimitive("amount") + "").replace("\"", ""));
 
 									else if (element.getAsJsonObject().get("amount").isJsonArray())
 										for (JsonElement elementAmount : element.getAsJsonObject().getAsJsonArray("amount"))
 											if (elementAmount.isJsonPrimitive() && outputs.indexOf(stack) <= element.getAsJsonObject().getAsJsonArray("amount").size() - 1)
-												stack.stackSize = Integer.parseInt(element.getAsJsonObject().getAsJsonArray("amount").get(outputs.indexOf(stack)) + "");
+												stack.stackSize = Integer.parseInt((element.getAsJsonObject().getAsJsonArray("amount").get(outputs.indexOf(stack)) + "").replace("\"", ""));
 							}
 							// OUTPUTS //
 
@@ -134,5 +135,11 @@ public class GuiTrade extends GuiBase {
 			this.outputs = outputs;
 			this.cost = cost;
 		}
+	}
+
+	@Override
+	public boolean doesGuiPauseGame()
+	{
+		return false;
 	}
 }
