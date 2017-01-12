@@ -9,18 +9,16 @@ import com.teamwizardry.librarianlib.client.gui.GuiBase;
 import com.teamwizardry.librarianlib.client.gui.GuiComponent;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentList;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentSprite;
+import com.teamwizardry.librarianlib.client.gui.components.ComponentText;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentVoid;
 import com.teamwizardry.librarianlib.client.gui.mixin.ButtonMixin;
 import com.teamwizardry.librarianlib.client.sprite.Sprite;
 import com.teamwizardry.librarianlib.client.sprite.Texture;
-import me.lordsaad.cashshop.api.ConfigValues;
 import me.lordsaad.cashshop.api.Constants;
 import me.lordsaad.cashshop.api.Utils;
 import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.InputStream;
@@ -33,12 +31,14 @@ import java.util.List;
  */
 public class GuiTrade extends GuiBase {
 
-	public static Texture spriteSheet = new Texture(new ResourceLocation(Constants.MOD_ID, "textures/guis/gui_trade.png"));
-	public static Sprite background = spriteSheet.getSprite("main_background", 177, 192);
-	public static Sprite sprArrowRight = spriteSheet.getSprite("arrow_right", 24, 19);
-	public static Sprite sprArrowRightHover = spriteSheet.getSprite("arrow_right_hover", 24, 19);
-	public static Sprite sprArrowLeft = spriteSheet.getSprite("arrow_left", 24, 19);
-	public static Sprite sprArrowLeftHover = spriteSheet.getSprite("arrow_left_hover", 24, 19);
+	public static final Texture spriteSheet = new Texture(new ResourceLocation(Constants.MOD_ID, "textures/guis/gui_trade.png"));
+	public static final Sprite background = spriteSheet.getSprite("main_background", 177, 192);
+	public static final Sprite sprArrowRight = spriteSheet.getSprite("arrow_right", 24, 19);
+	public static final Sprite sprArrowRightHover = spriteSheet.getSprite("arrow_right_hover", 24, 19);
+	public static final Sprite sprArrowLeft = spriteSheet.getSprite("arrow_left", 24, 19);
+	public static final Sprite sprArrowLeftHover = spriteSheet.getSprite("arrow_left_hover", 24, 19);
+	public static final Sprite sprGoldSign = spriteSheet.getSprite("gold_sign", 48, 32);
+	public static final Sprite sprCoin = new Texture(new ResourceLocation(Constants.MOD_ID, "textures/items/currency_coin.png")).getSprite("coin", 16, 16);
 	public String name;
 	public List<TradeInfo> trades;
 	public int wallet = 0;
@@ -47,11 +47,6 @@ public class GuiTrade extends GuiBase {
 
 	public GuiTrade(String npcFile) {
 		super(256, 256);
-
-		if (!Minecraft.getMinecraft().player.getEntityData().hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
-			Minecraft.getMinecraft().player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
-			Minecraft.getMinecraft().player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setInteger("currency", ConfigValues.starterAmount);
-		}
 
 		wallet = WalletCapabilityProvider.get(Minecraft.getMinecraft().player).getWallet();
 
@@ -65,7 +60,7 @@ public class GuiTrade extends GuiBase {
 			InputStreamReader reader = new InputStreamReader(stream);
 			JsonElement json = new JsonParser().parse(reader);
 
-			name = json.getAsJsonObject().getAsJsonPrimitive("name") + "";
+			name = json.getAsJsonObject().getAsJsonPrimitive("name").getAsString();
 			trades = new ArrayList<>();
 
 			if (json.isJsonObject() && json.getAsJsonObject().has("name") && json.getAsJsonObject().has("trades")
@@ -129,7 +124,6 @@ public class GuiTrade extends GuiBase {
 		}
 
 		List<ComponentVoid> slots = new ArrayList<>();
-		ComponentList tradeColumn1 = new ComponentList(15, 28);
 		for (TradeInfo info : trades) {
 			TradeSlot slot = new TradeSlot(this, info);
 			slots.add(slot.component);
@@ -145,7 +139,7 @@ public class GuiTrade extends GuiBase {
 
 		for (List<List<ComponentVoid>> pages : tradeComponents) {
 			for (List<ComponentVoid> columnComps : pages) {
-				ComponentList column = new ComponentList(55 + (85 * pages.indexOf(columnComps)), 59);
+				ComponentList column = new ComponentList(15 + (85 * pages.indexOf(columnComps)), 27);
 
 				for (ComponentVoid tradeComp : columnComps) column.add(tradeComp);
 
@@ -161,11 +155,11 @@ public class GuiTrade extends GuiBase {
 					}
 				}));
 
-				getMainComponents().add(column);
+				compBackground.add(column);
 			}
 		}
 
-		ComponentSprite nextComp = new ComponentSprite(sprArrowRight, 157, 224);
+		ComponentSprite nextComp = new ComponentSprite(sprArrowRight, 129 - (sprArrowRight.getWidth() / 2), 192);
 		new ButtonMixin<>(nextComp, () -> {
 		});
 		nextComp.BUS.hook(GuiComponent.MouseInEvent.class, (mouseInEvent -> {
@@ -177,9 +171,9 @@ public class GuiTrade extends GuiBase {
 		nextComp.BUS.hook(GuiComponent.MouseClickEvent.class, (mouseClickEvent -> {
 			if (page < tradeComponents.size() - 1) page++;
 		}));
-		getMainComponents().add(nextComp);
+		compBackground.add(nextComp);
 
-		ComponentSprite backComp = new ComponentSprite(sprArrowLeft, 74, 224);
+		ComponentSprite backComp = new ComponentSprite(sprArrowLeft, 45 - (sprArrowLeft.getWidth() / 2), 192);
 		new ButtonMixin<>(backComp, () -> {
 		});
 		backComp.BUS.hook(GuiComponent.MouseInEvent.class, (mouseInEvent -> {
@@ -191,9 +185,19 @@ public class GuiTrade extends GuiBase {
 		backComp.BUS.hook(GuiComponent.MouseClickEvent.class, (mouseClickEvent -> {
 			if (page > 0) page--;
 		}));
-		getMainComponents().add(backComp);
+		compBackground.add(backComp);
 
-		compBackground.add(tradeColumn1);
+		ComponentSprite walletSign = new ComponentSprite(sprGoldSign, 177, 8);
+		ComponentSprite coin = new ComponentSprite(sprCoin, -2, 17);
+		ComponentText amount = new ComponentText(11, 22 + (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2), ComponentText.TextAlignH.LEFT, ComponentText.TextAlignV.MIDDLE);
+		amount.getText().setValue(wallet + "");
+		walletSign.add(coin, amount);
+		compBackground.add(walletSign);
+
+		int center = Minecraft.getMinecraft().fontRendererObj.getStringWidth(name);
+		ComponentText title = new ComponentText(17 + (142 / 2) - (center / 2), 8 + (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2), ComponentText.TextAlignH.LEFT, ComponentText.TextAlignV.MIDDLE);
+		title.getText().setValue(name);
+		compBackground.add(title);
 	}
 
 	@Override
