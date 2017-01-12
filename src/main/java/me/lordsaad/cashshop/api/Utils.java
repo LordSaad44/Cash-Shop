@@ -1,7 +1,6 @@
 package me.lordsaad.cashshop.api;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -13,20 +12,30 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Utils {
 
-    @Nullable
-    public static ItemStack getStackFromString(String itemId) {
-        ResourceLocation location = new ResourceLocation(itemId);
-        ItemStack stack = null;
+	@Nullable
+	public static ItemStack getStackFromString(String itemId) {
+		int metadata = -1;
+		String ID;
 
-        if (ForgeRegistries.ITEMS.containsKey(location)) {
-            Item item = ForgeRegistries.ITEMS.getValue(location);
-            if (item != null) stack = new ItemStack(item);
+		if (itemId.contains(";")) {
+			ID = itemId.split(";")[0];
+			metadata = Integer.parseInt(itemId.split(";")[1]);
+		} else ID = itemId;
 
-        } else if (ForgeRegistries.BLOCKS.containsKey(location)) {
-            Block block = ForgeRegistries.BLOCKS.getValue(location);
-            if (block != null) stack = new ItemStack(block);
+		if (ID == null) return null;
+		ResourceLocation location = new ResourceLocation(ID);
+		ItemStack stack = null;
 
-        }
-        return stack;
-    }
+		if (ForgeRegistries.ITEMS.containsKey(location)) {
+			Item item = ForgeRegistries.ITEMS.getValue(location);
+			if (item != null) stack = new ItemStack(item);
+
+		} else if (ForgeRegistries.BLOCKS.containsKey(location)) {
+			Block block = ForgeRegistries.BLOCKS.getValue(location);
+			if (block != null) stack = new ItemStack(block);
+		}
+
+		if (stack != null && metadata != -1) stack = new ItemStack(stack.getItem(), 1, metadata);
+		return stack;
+	}
 }

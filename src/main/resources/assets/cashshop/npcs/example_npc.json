@@ -14,12 +14,6 @@
       "locked": false
     },
     {
-      "output": "minecraft:potato",
-      "amount": 64,
-      "cost": 20,
-      "locked": false
-    },
-    {
       "output": [
         "minecraft:potato",
         "minecraft:redstone",
@@ -35,6 +29,18 @@
         1
       ],
       "cost": 400,
+      "locked": false
+    },
+    {
+      "output": "minecraft:potato",
+      "amount": 64,
+      "cost": 20,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
       "locked": false
     }
   ]

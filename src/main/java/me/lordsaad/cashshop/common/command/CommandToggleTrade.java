@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.teamwizardry.librarianlib.LibrarianLib;
 import com.teamwizardry.librarianlib.client.core.JsonGenerationUtils;
+import com.teamwizardry.librarianlib.common.util.builders.JsonMaker;
 import me.lordsaad.cashshop.api.Constants;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -73,11 +74,9 @@ public class CommandToggleTrade extends CommandBase {
 				for (JsonObject newObject : trades) newArray.add(newObject);
 				object.add("trades", newArray);
 
-				String string = object.toString();
-
 				try {
 					FileWriter writer = new FileWriter(JsonGenerationUtils.INSTANCE.getAssetPath(Constants.MOD_ID) + "/npcs/" + args[0] + ".json");
-					writer.write(string);
+					writer.write(JsonMaker.serialize(object));
 					writer.flush();
 					writer.close();
 				} catch (IOException e) {
