@@ -1,12 +1,16 @@
 package me.lordsaad.cashshop.client.gui.trade;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.teamwizardry.librarianlib.LibrarianLib;
 import com.teamwizardry.librarianlib.client.gui.GuiBase;
+import com.teamwizardry.librarianlib.client.gui.GuiComponent;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentList;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentSprite;
+import com.teamwizardry.librarianlib.client.gui.components.ComponentVoid;
+import com.teamwizardry.librarianlib.client.gui.mixin.ButtonMixin;
 import com.teamwizardry.librarianlib.client.sprite.Sprite;
 import com.teamwizardry.librarianlib.client.sprite.Texture;
 import me.lordsaad.cashshop.api.ConfigValues;
@@ -31,9 +35,15 @@ public class GuiTrade extends GuiBase {
 
 	public static Texture spriteSheet = new Texture(new ResourceLocation(Constants.MOD_ID, "textures/guis/gui_trade.png"));
 	public static Sprite background = spriteSheet.getSprite("main_background", 177, 192);
+	public static Sprite sprArrowRight = spriteSheet.getSprite("arrow_right", 24, 19);
+	public static Sprite sprArrowRightHover = spriteSheet.getSprite("arrow_right_hover", 24, 19);
+	public static Sprite sprArrowLeft = spriteSheet.getSprite("arrow_left", 24, 19);
+	public static Sprite sprArrowLeftHover = spriteSheet.getSprite("arrow_left_hover", 24, 19);
 	public String name;
 	public List<TradeInfo> trades;
 	public int wallet = 0;
+	public List<List<List<ComponentVoid>>> tradeComponents = new ArrayList<>();
+	public int page = 0;
 
 	public GuiTrade(String npcFile) {
 		super(256, 256);
@@ -79,7 +89,6 @@ public class GuiTrade extends GuiBase {
 							if (element.getAsJsonObject().get("output").isJsonPrimitive()) {
 								ItemStack stack = Utils.getStackFromString(element.getAsJsonObject().getAsJsonPrimitive("output").getAsString());
 								if (stack != null) {
-
 									if (element.getAsJsonObject().get("amount").isJsonPrimitive())
 										stack.stackSize = element.getAsJsonObject().getAsJsonPrimitive("amount").getAsInt();
 									else if (element.getAsJsonObject().get("amount").isJsonArray())
@@ -119,11 +128,71 @@ public class GuiTrade extends GuiBase {
 			}
 		}
 
+		List<ComponentVoid> slots = new ArrayList<>();
 		ComponentList tradeColumn1 = new ComponentList(15, 28);
 		for (TradeInfo info : trades) {
 			TradeSlot slot = new TradeSlot(this, info);
-			tradeColumn1.add(slot.component);
+			slots.add(slot.component);
 		}
+
+		// Split trades into 10s
+		List<List<ComponentVoid>> splitPages = Lists.partition(slots, 10);
+
+		List<List<List<ComponentVoid>>> splitColumns = new ArrayList<>();
+		for (List<ComponentVoid> tradeComp : splitPages)
+			splitColumns.add(Lists.partition(tradeComp, 5));
+		tradeComponents.addAll(splitColumns);
+
+		for (List<List<ComponentVoid>> pages : tradeComponents) {
+			for (List<ComponentVoid> columnComps : pages) {
+				ComponentList column = new ComponentList(55 + (85 * pages.indexOf(columnComps)), 59);
+
+				for (ComponentVoid tradeComp : columnComps) column.add(tradeComp);
+
+				new ButtonMixin<>(column, () -> {
+				});
+				column.BUS.hook(GuiComponent.ComponentTickEvent.class, (componentTickEvent -> {
+					if (page == tradeComponents.indexOf(pages)) {
+						column.setEnabled(true);
+						column.setVisible(true);
+					} else {
+						column.setEnabled(false);
+						column.setVisible(false);
+					}
+				}));
+
+				getMainComponents().add(column);
+			}
+		}
+
+		ComponentSprite nextComp = new ComponentSprite(sprArrowRight, 157, 224);
+		new ButtonMixin<>(nextComp, () -> {
+		});
+		nextComp.BUS.hook(GuiComponent.MouseInEvent.class, (mouseInEvent -> {
+			nextComp.setSprite(sprArrowRightHover);
+		}));
+		nextComp.BUS.hook(GuiComponent.MouseOutEvent.class, (mouseOutEvent -> {
+			nextComp.setSprite(sprArrowRight);
+		}));
+		nextComp.BUS.hook(GuiComponent.MouseClickEvent.class, (mouseClickEvent -> {
+			if (page < tradeComponents.size() - 1) page++;
+		}));
+		getMainComponents().add(nextComp);
+
+		ComponentSprite backComp = new ComponentSprite(sprArrowLeft, 74, 224);
+		new ButtonMixin<>(backComp, () -> {
+		});
+		backComp.BUS.hook(GuiComponent.MouseInEvent.class, (mouseInEvent -> {
+			backComp.setSprite(sprArrowLeftHover);
+		}));
+		backComp.BUS.hook(GuiComponent.MouseOutEvent.class, (mouseOutEvent -> {
+			backComp.setSprite(sprArrowLeft);
+		}));
+		backComp.BUS.hook(GuiComponent.MouseClickEvent.class, (mouseClickEvent -> {
+			if (page > 0) page--;
+		}));
+		getMainComponents().add(backComp);
+
 		compBackground.add(tradeColumn1);
 	}
 

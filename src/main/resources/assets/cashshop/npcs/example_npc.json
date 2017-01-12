@@ -42,6 +42,60 @@
       "amount": 4,
       "cost": 5,
       "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
+    },
+    {
+      "output": "minecraft:stained_glass;5",
+      "amount": 4,
+      "cost": 5,
+      "locked": false
     }
   ]
 }

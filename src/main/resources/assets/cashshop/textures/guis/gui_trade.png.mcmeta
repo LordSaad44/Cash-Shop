@@ -4,17 +4,17 @@
 		"textureHeight":256,
 		"sprites": {
 			"main_background":[0, 0, 176, 192],
-			"gold_sign":[177, 7, 48, 32],
+			"gold_sign":[176, 7, 48, 32],
 			
-			"buy_normal":[3, 233, 26, 24],
-			"buy_highlighted":[31, 233, 26, 24],
-			"buy_locked":[59, 233, 26, 24],
+			"buy_normal":[3, 232, 26, 24],
+			"buy_highlighted":[31, 232, 26, 24],
+			"buy_locked":[59, 232, 26, 24],
 			
-			"arrow_left_hover":[87, 233, 24, 19],
-			"arrow_right_hover":[114, 233, 24, 19],
+			"arrow_left_hover":[86, 232, 24, 19],
+			"arrow_right_hover":[112, 232, 24, 19],
 			
-			"arrow_left":[139, 233, 24, 19],
-			"arrow_right":[165, 233, 24, 19]			
+			"arrow_left":[138, 232, 24, 19],
+			"arrow_right":[164, 232, 24, 19]
 		}
 	}
 }
