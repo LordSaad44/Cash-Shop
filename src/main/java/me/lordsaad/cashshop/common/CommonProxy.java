@@ -1,5 +1,6 @@
 package me.lordsaad.cashshop.common;
 
+import com.teamwizardry.librarianlib.common.util.EasyConfigHandler;
 import me.lordsaad.cashshop.Cashshop;
 import me.lordsaad.cashshop.api.*;
 import me.lordsaad.cashshop.client.gui.GuiHandler;
@@ -21,6 +22,8 @@ public class CommonProxy {
 		ModItems.init();
 		ModEntities.init();
 		ModCapabilities.preInit();
+
+		EasyConfigHandler.init();
 
 		WalletPacketHandler.registerMessages();
 		NetworkRegistry.INSTANCE.registerGuiHandler(Cashshop.instance, new GuiHandler());
