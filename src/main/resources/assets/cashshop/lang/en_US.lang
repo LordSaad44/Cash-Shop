@@ -1,0 +1,8 @@
+itemGroup.cashshop=Cash Shop
+item.cashshop:currency_coin.name=Coin
+item.cashshop:currency_coin_small.name=Small Bag of Coins
+item.cashshop:currency_coin_large.name=Large Bag of Coins
+item.cashshop:purse.name=Coin Purse
+item.cashshop:magic_coin.name=BitCoin
+cashshop:command.wallet.usage=/wallet <player> <get/set/add/remove> [amount]
+cashshop:command.toggletrade.usage=/toggletrade <npc file name> <index of trade in json file>

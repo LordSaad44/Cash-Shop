@@ -11,6 +11,7 @@ import me.lordsaad.cashshop.api.Constants;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import org.jetbrains.annotations.NotNull;
@@ -35,15 +36,12 @@ public class CommandToggleTrade extends CommandBase {
 	@NotNull
 	@Override
 	public String getUsage(@NotNull ICommandSender sender) {
-		return "Will enable/disable a trade of a given npc";
+		return Constants.MOD_ID + ":command.toggletrade.usage";
 	}
 
 	@Override
 	public void execute(@NotNull MinecraftServer server, @NotNull ICommandSender sender, @NotNull String[] args) throws CommandException {
-		if (args.length < 2) {
-			sender.sendMessage(new TextComponentString("Too few arguments. Usage: /toggletrade example_npc tradeIndex enable/disable"));
-			return;
-		}
+		if (args.length < 2) throw new WrongUsageException(getUsage(sender));
 		InputStream stream = LibrarianLib.PROXY.getResource(Constants.MOD_ID, "npcs/" + args[0] + ".json");
 		if (stream != null) {
 
@@ -79,6 +77,7 @@ public class CommandToggleTrade extends CommandBase {
 					writer.write(JsonMaker.serialize(object));
 					writer.flush();
 					writer.close();
+					sender.sendMessage(new TextComponentString(args[0] + "'s trades changed successfully."));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

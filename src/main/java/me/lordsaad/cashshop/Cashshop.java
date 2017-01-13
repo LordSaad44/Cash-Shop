@@ -3,6 +3,7 @@ package me.lordsaad.cashshop;
 import me.lordsaad.cashshop.api.Constants;
 import me.lordsaad.cashshop.common.CommonProxy;
 import me.lordsaad.cashshop.common.command.CommandToggleTrade;
+import me.lordsaad.cashshop.common.command.CommandWallet;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -41,5 +42,6 @@ public class Cashshop {
 	@Mod.EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandToggleTrade());
+		event.registerServerCommand(new CommandWallet());
 	}
 }
