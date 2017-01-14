@@ -4,6 +4,7 @@ import me.lordsaad.cashshop.api.capability.DefaultWalletCapability;
 import me.lordsaad.cashshop.api.capability.IWalletCapability;
 import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
 import me.lordsaad.cashshop.api.capability.WalletCapabilityStorage;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -20,8 +21,8 @@ public class ModCapabilities {
 	}
 
 	@SubscribeEvent
-	public void onAddCapabilities(AttachCapabilitiesEvent.Entity e) {
-		if (e.getEntity() instanceof EntityPlayer) {
+	public void onAddCapabilities(AttachCapabilitiesEvent<Entity> e) {
+		if (e.getObject() instanceof EntityPlayer) {
 			WalletCapabilityProvider cap = new WalletCapabilityProvider(new DefaultWalletCapability());
 			e.addCapability(new ResourceLocation(Constants.MOD_ID, "capabilities"), cap);
 		}

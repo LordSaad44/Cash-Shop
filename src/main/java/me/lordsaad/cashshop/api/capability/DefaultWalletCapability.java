@@ -1,5 +1,6 @@
 package me.lordsaad.cashshop.api.capability;
 
+import me.lordsaad.cashshop.api.ConfigValues;
 import me.lordsaad.cashshop.common.network.MessageUpdateCapabilities;
 import me.lordsaad.cashshop.common.network.WalletPacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class DefaultWalletCapability implements IWalletCapability {
 
-	int wallet = 10000;
+	int wallet = ConfigValues.starterAmount;
 
 	@Override
 	public int getWallet() {
