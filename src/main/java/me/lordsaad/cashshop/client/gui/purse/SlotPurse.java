@@ -2,7 +2,8 @@ package me.lordsaad.cashshop.client.gui.purse;
 
 import me.lordsaad.cashshop.api.ConfigValues;
 import me.lordsaad.cashshop.api.ModItems;
-import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
+import me.lordsaad.cashshop.api.capability.CapabilityWallet;
+import me.lordsaad.cashshop.api.capability.IWalletCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -45,9 +46,8 @@ public class SlotPurse extends Slot {
 			else if (stack.getMetadata() == 2)
 				worth = ConfigValues.largeCurrencyAmount;
 
-			WalletCapabilityProvider.get(Minecraft.getMinecraft().player)
-					.setWallet(WalletCapabilityProvider.get(Minecraft.getMinecraft().player).getWallet() + worth * 16,
-							Minecraft.getMinecraft().player);
+			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+			walletCap.setWallet(walletCap.getWallet() + worth * 16);
 			decrStackSize(1);
 		}
 	}
@@ -64,9 +64,8 @@ public class SlotPurse extends Slot {
 			else if (getSlotIndex() == 3)
 				worth = ConfigValues.largeCurrencyAmount;
 
-			WalletCapabilityProvider.get(Minecraft.getMinecraft().player)
-					.setWallet(WalletCapabilityProvider.get(Minecraft.getMinecraft().player).getWallet() - worth * 16,
-							playerIn);
+			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+			walletCap.setWallet(walletCap.getWallet() - worth * 16);
 
 			if (getSlotIndex() == 1)
 				this.inventory.setInventorySlotContents(getSlotIndex(), new ItemStack(ModItems.CURRENCY, 16, 1));
@@ -86,7 +85,8 @@ public class SlotPurse extends Slot {
 	@Override
 	public boolean canTakeStack(EntityPlayer playerIn) {
 		if (isOutput) {
-			int wallet = WalletCapabilityProvider.get(Minecraft.getMinecraft().player).getWallet();
+			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+			int wallet = walletCap.getWallet();
 			int worth = 0;
 			if (getSlotIndex() == 1)
 				worth = ConfigValues.smallCurrencyAmount;

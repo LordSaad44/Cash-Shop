@@ -21,7 +21,7 @@ public class CommonProxy {
 		ModBlocks.init();
 		ModItems.init();
 		ModEntities.init();
-		ModCapabilities.preInit();
+		ModCapabilities.init();
 
 		EasyConfigHandler.init();
 

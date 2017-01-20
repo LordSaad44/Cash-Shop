@@ -16,7 +16,8 @@ import com.teamwizardry.librarianlib.client.sprite.Sprite;
 import com.teamwizardry.librarianlib.client.sprite.Texture;
 import me.lordsaad.cashshop.api.Constants;
 import me.lordsaad.cashshop.api.Utils;
-import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
+import me.lordsaad.cashshop.api.capability.CapabilityWallet;
+import me.lordsaad.cashshop.api.capability.IWalletCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +49,8 @@ public class GuiTrade extends GuiBase {
 	public GuiTrade(String npcFile) {
 		super(256, 256);
 
-		wallet = WalletCapabilityProvider.get(Minecraft.getMinecraft().player).getWallet();
+		IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+		wallet = walletCap.getWallet();
 
 		ComponentSprite compBackground = new ComponentSprite(background,
 				(getGuiWidth() / 2) - (background.getWidth() / 2),

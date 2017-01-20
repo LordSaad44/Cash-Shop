@@ -1,14 +1,13 @@
 package me.lordsaad.cashshop.api;
 
-import me.lordsaad.cashshop.api.capability.DefaultWalletCapability;
-import me.lordsaad.cashshop.api.capability.IWalletCapability;
-import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
-import me.lordsaad.cashshop.api.capability.WalletCapabilityStorage;
-import net.minecraft.entity.Entity;
+import me.lordsaad.cashshop.api.capability.CapabilityWallet;
+import me.lordsaad.cashshop.api.capability.WalletSerializer;
+import me.lordsaad.cashshop.common.network.PacketWalletSync;
+import me.lordsaad.cashshop.common.network.WalletPacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -16,15 +15,22 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class ModCapabilities {
 
-	public static void preInit() {
-		CapabilityManager.INSTANCE.register(IWalletCapability.class, new WalletCapabilityStorage(), DefaultWalletCapability.class);
+	public static void init() {
+		CapabilityWallet.register();
 	}
 
 	@SubscribeEvent
-	public void onAddCapabilities(AttachCapabilitiesEvent<Entity> e) {
-		if (e.getObject() instanceof EntityPlayer) {
-			WalletCapabilityProvider cap = new WalletCapabilityProvider(new DefaultWalletCapability());
-			e.addCapability(new ResourceLocation(Constants.MOD_ID, "capabilities"), cap);
+	public static void attachCaps(AttachCapabilitiesEvent.Entity event) {
+		if (event.getEntity() instanceof EntityPlayer)
+			event.addCapability(WalletSerializer.CAP_KEY, new WalletSerializer());
+	}
+
+	@SubscribeEvent
+	public static void syncWalletCap(EntityJoinWorldEvent event) {
+		if (!(event.getEntity() instanceof EntityPlayer)) return;
+		EntityPlayer player = (EntityPlayer) event.getEntity();
+		if (!player.world.isRemote) {
+			WalletPacketHandler.INSTANCE.sendTo(new PacketWalletSync(player.getCapability(CapabilityWallet.WALLET, null).getWallet()), (EntityPlayerMP) player);
 		}
 	}
 }

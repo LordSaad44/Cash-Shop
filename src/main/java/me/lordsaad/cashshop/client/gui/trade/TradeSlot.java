@@ -1,7 +1,6 @@
 package me.lordsaad.cashshop.client.gui.trade;
 
 import com.teamwizardry.librarianlib.client.gui.GuiComponent;
-import com.teamwizardry.librarianlib.client.gui.components.ComponentSlot;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentSprite;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentText;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentVoid;
@@ -10,7 +9,8 @@ import com.teamwizardry.librarianlib.client.sprite.Sprite;
 import com.teamwizardry.librarianlib.client.sprite.Texture;
 import com.teamwizardry.librarianlib.common.util.math.interpolate.position.InterpLine;
 import me.lordsaad.cashshop.api.Constants;
-import me.lordsaad.cashshop.api.capability.WalletCapabilityProvider;
+import me.lordsaad.cashshop.api.capability.CapabilityWallet;
+import me.lordsaad.cashshop.api.capability.IWalletCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -48,8 +48,8 @@ public class TradeSlot {
 		buyButton.BUS.hook(GuiComponent.MouseClickEvent.class, (event) -> {
 			if (tradeInfo.cost > base.wallet) return;
 
-			WalletCapabilityProvider.get(Minecraft.getMinecraft().player)
-					.setWallet(base.wallet - tradeInfo.cost, Minecraft.getMinecraft().player);
+			IWalletCapability wallet = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+			wallet.setWallet(base.wallet - tradeInfo.cost);
 
 			for (ItemStack stack : tradeInfo.outputs)
 				Minecraft.getMinecraft().player.inventory.addItemStackToInventory(stack.copy());
@@ -68,9 +68,9 @@ public class TradeSlot {
 		List<Vec3d> list = line.list(tradeInfo.outputs.size());
 		for (ItemStack output : tradeInfo.outputs) {
 			Vec3d point = list.get(tradeInfo.outputs.indexOf(output));
-			ComponentSlot slot = new ComponentSlot((int) point.xCoord, (int) point.yCoord);
-			slot.getStack().setValue(output);
-			plate.add(slot);
+			//ComponentSlot slot = new ComponentSlot(new SlotBase(IItemHandlerModifiable.)) new ComponentSlot((int) point.xCoord, (int) point.yCoord);
+			//slot.getStack().setValue(output);
+			//plate.add(slot);
 		}
 
 		component = plate;
