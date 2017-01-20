@@ -15,10 +15,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class ModCapabilities {
 
-	public static void init() {
-		CapabilityWallet.register();
-	}
-
 	@SubscribeEvent
 	public static void attachCaps(AttachCapabilitiesEvent.Entity event) {
 		if (event.getEntity() instanceof EntityPlayer)

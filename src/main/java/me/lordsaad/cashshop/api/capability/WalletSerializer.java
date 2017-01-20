@@ -32,7 +32,6 @@ public class WalletSerializer implements ICapabilitySerializable<NBTTagInt> {
 		return null;
 	}
 
-
 	@Override
 	public NBTTagInt serializeNBT() {
 		return wallet.serializeNBT();
@@ -43,7 +42,7 @@ public class WalletSerializer implements ICapabilitySerializable<NBTTagInt> {
 		wallet.deserializeNBT(nbt);
 	}
 
-	public class DefaultWalletCap implements IWalletCapability {
+	public static class DefaultWalletCap implements IWalletCapability {
 		private int wallet = ConfigValues.starterAmount;
 
 		@Override

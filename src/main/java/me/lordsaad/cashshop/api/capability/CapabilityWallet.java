@@ -18,12 +18,13 @@ public class CapabilityWallet {
 		CapabilityManager.INSTANCE.register(IWalletCapability.class, new Capability.IStorage<IWalletCapability>() {
 			@Override
 			public NBTBase writeNBT(Capability<IWalletCapability> capability, IWalletCapability instance, EnumFacing side) {
-				return null;
+				return capability.writeNBT(instance, side);
 			}
 
 			@Override
 			public void readNBT(Capability<IWalletCapability> capability, IWalletCapability instance, EnumFacing side, NBTBase nbt) {
+				capability.readNBT(instance, side, nbt);
 			}
-		}, () -> null);
+		}, WalletSerializer.DefaultWalletCap::new);
 	}
 }
