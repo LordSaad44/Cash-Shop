@@ -6,6 +6,7 @@ import com.teamwizardry.librarianlib.client.sprite.Texture;
 import com.teamwizardry.librarianlib.common.util.ConfigPropertyInt;
 import com.teamwizardry.librarianlib.common.util.math.Vec2d;
 import me.lordsaad.cashshop.api.Constants;
+import me.lordsaad.cashshop.api.capability.CapabilityWallet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -82,8 +83,7 @@ public class HudHandler {
 		coin.getTex().bind();
 		coin.draw((int) ClientTickHandler.getPartialTicks(), position.getXf() + coinBackground.getWidth(), position.getYf() - 4);
 
-		int wallet = 0;//Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null).getWallet();
-
+		int wallet = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null).getWallet();
 
 		int nbWidth = (coinBackground.getWidth() / 2) - (Minecraft.getMinecraft().fontRendererObj.getStringWidth(wallet + "") / 2);
 

@@ -5,6 +5,7 @@ import me.lordsaad.cashshop.Cashshop;
 import me.lordsaad.cashshop.api.*;
 import me.lordsaad.cashshop.api.capability.CapabilityWallet;
 import me.lordsaad.cashshop.client.gui.GuiHandler;
+import me.lordsaad.cashshop.common.core.EventHandler;
 import me.lordsaad.cashshop.common.network.WalletPacketHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -36,6 +37,6 @@ public class CommonProxy {
 
 	public void postInit(FMLPostInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(ModCapabilities.class);
-
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 }

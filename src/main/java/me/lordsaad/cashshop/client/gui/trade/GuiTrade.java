@@ -42,15 +42,11 @@ public class GuiTrade extends GuiBase {
 	public static final Sprite sprCoin = new Texture(new ResourceLocation(Constants.MOD_ID, "textures/items/currency_coin.png")).getSprite("coin", 16, 16);
 	public String name;
 	public List<TradeInfo> trades;
-	public int wallet = 0;
 	public List<List<List<ComponentVoid>>> tradeComponents = new ArrayList<>();
 	public int page = 0;
 
 	public GuiTrade(String npcFile) {
 		super(256, 256);
-
-		IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-		wallet = walletCap.getWallet();
 
 		ComponentSprite compBackground = new ComponentSprite(background,
 				(getGuiWidth() / 2) - (background.getWidth() / 2),
@@ -192,7 +188,10 @@ public class GuiTrade extends GuiBase {
 		ComponentSprite walletSign = new ComponentSprite(sprGoldSign, 177, 8);
 		ComponentSprite coin = new ComponentSprite(sprCoin, -2, 17);
 		ComponentText amount = new ComponentText(11, 22 + (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2), ComponentText.TextAlignH.LEFT, ComponentText.TextAlignV.MIDDLE);
-		amount.getText().setValue(wallet + "");
+		amount.BUS.hook(GuiComponent.ComponentTickEvent.class, componentTickEvent -> {
+			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+			amount.getText().setValue(walletCap.getWallet() + "");
+		});
 		walletSign.add(coin, amount);
 		compBackground.add(walletSign);
 

@@ -42,17 +42,19 @@ public class TradeSlot {
 		new ButtonMixin<>(buyButton, () -> {
 		});
 		buyButton.BUS.hook(GuiComponent.ComponentTickEvent.class, (event) -> {
-			if (tradeInfo.cost <= base.wallet) {
+			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+			if (tradeInfo.cost <= walletCap.getWallet()) {
 				if (event.getComponent().getMouseOver())
 					buyButton.setSprite(sprBuyHighlighted);
 				else buyButton.setSprite(sprBuyNormal);
 			} else buyButton.setSprite(sprBuyLocked);
 		});
 		buyButton.BUS.hook(GuiComponent.MouseClickEvent.class, (event) -> {
-			if (tradeInfo.cost > base.wallet) return;
+			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
+			int wallet = walletCap.getWallet();
+			if (tradeInfo.cost > wallet) return;
 
-			IWalletCapability wallet = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-			wallet.setWallet(base.wallet - tradeInfo.cost);
+			walletCap.setWallet(walletCap.getWallet() - tradeInfo.cost);
 
 			for (ItemStack stack : tradeInfo.outputs)
 				Minecraft.getMinecraft().player.inventory.addItemStackToInventory(stack.copy());
