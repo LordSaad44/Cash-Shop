@@ -2,13 +2,12 @@ package me.lordsaad.cashshop.client.gui.trade;
 
 import com.teamwizardry.librarianlib.client.gui.GuiComponent;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentSprite;
+import com.teamwizardry.librarianlib.client.gui.components.ComponentStack;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentText;
 import com.teamwizardry.librarianlib.client.gui.components.ComponentVoid;
 import com.teamwizardry.librarianlib.client.gui.mixin.ButtonMixin;
-import com.teamwizardry.librarianlib.client.guicontainer.ComponentSlot;
 import com.teamwizardry.librarianlib.client.sprite.Sprite;
 import com.teamwizardry.librarianlib.client.sprite.Texture;
-import com.teamwizardry.librarianlib.common.container.internal.SlotBase;
 import com.teamwizardry.librarianlib.common.util.math.interpolate.position.InterpLine;
 import me.lordsaad.cashshop.api.Constants;
 import me.lordsaad.cashshop.api.capability.CapabilityWallet;
@@ -17,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.items.IItemHandler;
 
 import java.awt.*;
 import java.util.List;
@@ -73,40 +71,11 @@ public class TradeSlot {
 		List<Vec3d> list = line.list(tradeInfo.outputs.size());
 		for (ItemStack output : tradeInfo.outputs) {
 			Vec3d point = list.get(tradeInfo.outputs.indexOf(output));
-			ComponentSlot slot = new ComponentSlot(new SlotBase(new SlotItemHandler(output), 0), (int) point.xCoord, (int) point.yCoord);
+			ComponentStack slot = new ComponentStack((int) point.xCoord, (int) point.yCoord);
+			slot.getStack().setValue(output);
 			plate.add(slot);
 		}
 
 		component = plate;
-	}
-
-	public class SlotItemHandler implements IItemHandler {
-
-		private ItemStack stack;
-
-		public SlotItemHandler(ItemStack stack) {
-
-			this.stack = stack;
-		}
-
-		@Override
-		public int getSlots() {
-			return 0;
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot) {
-			return stack;
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			return null;
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			return null;
-		}
 	}
 }
