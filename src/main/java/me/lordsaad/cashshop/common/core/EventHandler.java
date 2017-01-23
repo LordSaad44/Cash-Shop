@@ -15,6 +15,7 @@ public class EventHandler {
 	@SubscribeEvent
 	public void death(PlayerEvent.Clone event) {
 		int wallet = event.getOriginal().getCapability(CapabilityWallet.WALLET, null).getWallet();
+		event.getEntity().getCapability(CapabilityWallet.WALLET, null).setWallet(wallet);
 		WalletPacketHandler.INSTANCE.sendTo(new PacketWalletSync(wallet), (EntityPlayerMP) event.getEntity());
 	}
 }

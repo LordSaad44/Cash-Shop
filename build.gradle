@@ -35,9 +35,13 @@ minecraft {
 
 repositories {
     mavenCentral()
+    maven {
+        url "http://mvn.rx14.co.uk/shadowfacts/"
+    }
 }
 
 dependencies {
+    compile "net.shadowfacts:Forgelin:1.2.0"
 }
 
 processResources {
