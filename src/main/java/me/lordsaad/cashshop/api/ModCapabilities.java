@@ -26,7 +26,7 @@ public class ModCapabilities {
 		if (!(event.getEntity() instanceof EntityPlayer)) return;
 		EntityPlayer player = (EntityPlayer) event.getEntity();
 		if (!player.world.isRemote) {
-			WalletPacketHandler.INSTANCE.sendTo(new PacketWalletSync(player.getCapability(CapabilityWallet.WALLET, null).getWallet()), (EntityPlayerMP) player);
+			WalletPacketHandler.INSTANCE.sendTo(new PacketWalletSync(player.getCapability(CapabilityWallet.WALLET, null).getAmount()), (EntityPlayerMP) player);
 		}
 	}
 }

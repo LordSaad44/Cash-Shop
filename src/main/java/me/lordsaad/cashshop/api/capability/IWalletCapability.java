@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IWalletCapability extends INBTSerializable<NBTTagInt> {
 
-	int getWallet();
+	int getAmount();
 
-	void setWallet(int money);
+	void setAmount(int money);
 }

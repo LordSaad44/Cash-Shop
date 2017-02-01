@@ -1,9 +1,11 @@
 package me.lordsaad.cashshop.client.gui.purse;
 
+import com.teamwizardry.librarianlib.common.network.PacketHandler;
 import me.lordsaad.cashshop.api.ConfigValues;
 import me.lordsaad.cashshop.api.ModItems;
 import me.lordsaad.cashshop.api.capability.CapabilityWallet;
 import me.lordsaad.cashshop.api.capability.IWalletCapability;
+import me.lordsaad.cashshop.common.network.PacketWalletChange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -47,8 +49,8 @@ public class SlotPurse extends Slot {
 				worth = ConfigValues.largeCurrencyAmount;
 
 			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-			walletCap.setWallet(walletCap.getWallet() + worth * 16);
-			decrStackSize(1);
+			PacketHandler.NETWORK.sendToServer(new PacketWalletChange(walletCap.getAmount() + (worth * stack.stackSize)));
+			decrStackSize(stack.stackSize);
 		}
 	}
 
@@ -57,15 +59,15 @@ public class SlotPurse extends Slot {
 		super.onPickupFromSlot(playerIn, stack);
 		if (isOutput) {
 			int worth = 0;
-			if (getSlotIndex() == 1)
+			if (stack.getMetadata() == 0)
 				worth = ConfigValues.smallCurrencyAmount;
-			else if (getSlotIndex() == 2)
+			else if (stack.getMetadata() == 1)
 				worth = ConfigValues.normalCurrencyAmount;
-			else if (getSlotIndex() == 3)
+			else if (stack.getMetadata() == 2)
 				worth = ConfigValues.largeCurrencyAmount;
 
 			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-			walletCap.setWallet(walletCap.getWallet() - worth * 16);
+			PacketHandler.NETWORK.sendToServer(new PacketWalletChange(walletCap.getAmount() - (worth * stack.stackSize)));
 
 			if (getSlotIndex() == 1)
 				this.inventory.setInventorySlotContents(getSlotIndex(), new ItemStack(ModItems.CURRENCY, 16, 1));
@@ -86,7 +88,7 @@ public class SlotPurse extends Slot {
 	public boolean canTakeStack(EntityPlayer playerIn) {
 		if (isOutput) {
 			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-			int wallet = walletCap.getWallet();
+			int wallet = walletCap.getAmount();
 			int worth = 0;
 			if (getSlotIndex() == 1)
 				worth = ConfigValues.smallCurrencyAmount;

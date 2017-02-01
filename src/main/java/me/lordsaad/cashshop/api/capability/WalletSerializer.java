@@ -46,12 +46,12 @@ public class WalletSerializer implements ICapabilitySerializable<NBTTagInt> {
 		private int wallet = ConfigValues.starterAmount;
 
 		@Override
-		public int getWallet() {
+		public int getAmount() {
 			return wallet;
 		}
 
 		@Override
-		public void setWallet(int money) {
+		public void setAmount(int money) {
 			this.wallet = money;
 		}
 

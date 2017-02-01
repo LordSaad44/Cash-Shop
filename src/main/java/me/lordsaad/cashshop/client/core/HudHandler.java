@@ -83,7 +83,7 @@ public class HudHandler {
 		coin.getTex().bind();
 		coin.draw((int) ClientTickHandler.getPartialTicks(), position.getXf() + coinBackground.getWidth(), position.getYf() - 4);
 
-		int wallet = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null).getWallet();
+		int wallet = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null).getAmount();
 
 		int nbWidth = (coinBackground.getWidth() / 2) - (Minecraft.getMinecraft().fontRendererObj.getStringWidth(wallet + "") / 2);
 

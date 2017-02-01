@@ -8,10 +8,12 @@ import com.teamwizardry.librarianlib.client.gui.components.ComponentVoid;
 import com.teamwizardry.librarianlib.client.gui.mixin.ButtonMixin;
 import com.teamwizardry.librarianlib.client.sprite.Sprite;
 import com.teamwizardry.librarianlib.client.sprite.Texture;
+import com.teamwizardry.librarianlib.common.network.PacketHandler;
 import com.teamwizardry.librarianlib.common.util.math.interpolate.position.InterpLine;
 import me.lordsaad.cashshop.api.Constants;
 import me.lordsaad.cashshop.api.capability.CapabilityWallet;
 import me.lordsaad.cashshop.api.capability.IWalletCapability;
+import me.lordsaad.cashshop.common.network.PacketWalletChange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -41,7 +43,7 @@ public class TradeSlot {
 		});
 		buyButton.BUS.hook(GuiComponent.ComponentTickEvent.class, (event) -> {
 			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-			if (tradeInfo.cost <= walletCap.getWallet()) {
+			if (tradeInfo.cost <= walletCap.getAmount()) {
 				if (event.getComponent().getMouseOver())
 					buyButton.setSprite(sprBuyHighlighted);
 				else buyButton.setSprite(sprBuyNormal);
@@ -49,10 +51,10 @@ public class TradeSlot {
 		});
 		buyButton.BUS.hook(GuiComponent.MouseClickEvent.class, (event) -> {
 			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-			int wallet = walletCap.getWallet();
+			int wallet = walletCap.getAmount();
 			if (tradeInfo.cost > wallet) return;
 
-			walletCap.setWallet(walletCap.getWallet() - tradeInfo.cost);
+			PacketHandler.NETWORK.sendToServer(new PacketWalletChange(walletCap.getAmount() - tradeInfo.cost));
 
 			for (ItemStack stack : tradeInfo.outputs)
 				Minecraft.getMinecraft().player.inventory.addItemStackToInventory(stack.copy());

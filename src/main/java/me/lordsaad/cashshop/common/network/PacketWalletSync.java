@@ -34,12 +34,9 @@ public class PacketWalletSync implements IMessage {
 	public static class PacketWalletSyncHandler implements IMessageHandler<PacketWalletSync, IMessage> {
 		@Override
 		public IMessage onMessage(final PacketWalletSync message, final MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(() -> processMessage(message, ctx));
+			Minecraft.getMinecraft().addScheduledTask(() ->
+					Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null).setAmount(message.wallet));
 			return null;
-		}
-
-		private void processMessage(PacketWalletSync message, MessageContext ctx) {
-			Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null).setWallet(message.wallet);
 		}
 	}
 }

@@ -190,7 +190,7 @@ public class GuiTrade extends GuiBase {
 		ComponentText amount = new ComponentText(11, 22 + (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2), ComponentText.TextAlignH.LEFT, ComponentText.TextAlignV.MIDDLE);
 		amount.BUS.hook(GuiComponent.ComponentTickEvent.class, componentTickEvent -> {
 			IWalletCapability walletCap = Minecraft.getMinecraft().player.getCapability(CapabilityWallet.WALLET, null);
-			amount.getText().setValue(walletCap.getWallet() + "");
+			amount.getText().setValue(walletCap.getAmount() + "");
 		});
 		walletSign.add(coin, amount);
 		compBackground.add(walletSign);
